@@ -1,0 +1,27 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Backend (Maven / Java)
+labigel-backend/target/
+labigel-backend/.mvn/
+*.class
+
+# Backend uploads (runtime data, not source)
+labigel-backend/uploads/
+
+# Frontend (Next.js) — see labigel-frontend/.gitignore for the full list
+labigel-frontend/node_modules/
+labigel-frontend/.next/
+labigel-frontend/out/
+labigel-frontend/*.tsbuildinfo
+
+# Env files (never commit secrets)
+.env
+.env.local
+.env.*.local

@@ -1,0 +1,54 @@
+services:
+  db:
+    image: postgres:15
+    container_name: labigel_db
+    environment:
+      POSTGRES_DB: labigel_db
+      POSTGRES_USER: labigel
+      POSTGRES_PASSWORD: labigel2024
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U labigel -d labigel_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: 
+      context: ./labigel-backend
+      dockerfile: Dockerfile
+    container_name: labigel_backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/labigel_db
+      - SPRING_DATASOURCE_USERNAME=labigel
+      - SPRING_DATASOURCE_PASSWORD=labigel2024
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - UPLOAD_DIR=/app/uploads
+      - JWT_SECRET=5a22530a6c0b4845942468516d2179752538466e3a7923412a43322a363753713f68444a72742962456f3458625927514a6047514f7b2c6275727b7c252b474244
+      - JWT_EXPIRATION=86400000
+    volumes:
+      - backend_uploads:/app/uploads
+
+  frontend:
+    build:
+      context: ./labigel-frontend
+      dockerfile: Dockerfile
+    container_name: labigel_frontend
+    ports:
+      - "3001:3000"
+    depends_on:
+      - backend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8080/api
+
+volumes:
+  postgres_data:
+  backend_uploads:
