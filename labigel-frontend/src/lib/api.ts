@@ -9,6 +9,8 @@ import {
   SiteSettings,
   Subcategory,
   User,
+  UserAccount,
+  UserRole,
 } from '@/types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
@@ -86,6 +88,20 @@ export interface ChangePasswordPayload {
   newPassword: string;
 }
 
+export interface UserCreatePayload {
+  email: string;
+  password: string;
+  fullName: string;
+  role: UserRole;
+}
+
+export interface UserUpdatePayload {
+  fullName: string;
+  role: UserRole;
+  isActive?: boolean;
+  password?: string;
+}
+
 export interface ProductListParams {
   page?: number;
   size?: number;
@@ -131,6 +147,7 @@ export const adminApi = {
   updateProduct: (id: number, data: ProductPayload): Promise<ApiResponse<Product>> => api.put(`/admin/products/${id}`, data),
   deleteProduct: (id: number): Promise<ApiResponse<null>> => api.delete(`/admin/products/${id}`),
   toggleProduct: (id: number): Promise<ApiResponse<null>> => api.patch(`/admin/products/${id}/toggle`),
+  updateProductImage: (id: number, imageUrl: string): Promise<ApiResponse<Product>> => api.patch(`/admin/products/${id}/image`, { imageUrl }),
 
   // Settings
   getSettings: (): Promise<ApiResponse<SiteSettings>> => api.get('/admin/settings'),
@@ -144,4 +161,10 @@ export const adminApi = {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
+
+  // Users (admin-panel accounts — ADMIN role only)
+  getUsers: (): Promise<ApiResponse<UserAccount[]>> => api.get('/admin/users'),
+  createUser: (data: UserCreatePayload): Promise<ApiResponse<UserAccount>> => api.post('/admin/users', data),
+  updateUser: (id: number, data: UserUpdatePayload): Promise<ApiResponse<UserAccount>> => api.put(`/admin/users/${id}`, data),
+  deleteUser: (id: number): Promise<ApiResponse<null>> => api.delete(`/admin/users/${id}`),
 };

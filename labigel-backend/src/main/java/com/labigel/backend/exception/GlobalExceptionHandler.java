@@ -2,6 +2,7 @@ package com.labigel.backend.exception;
 
 import com.labigel.backend.dto.response.ApiResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -46,6 +47,12 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResponse<Void> handleIllegalArgumentException(IllegalArgumentException ex) {
         return ApiResponse.error(ex.getMessage());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ApiResponse<Void> handleAccessDeniedException(AccessDeniedException ex) {
+        return ApiResponse.error("Bu işlem için yetkiniz yok");
     }
 
     @ExceptionHandler(Exception.class)

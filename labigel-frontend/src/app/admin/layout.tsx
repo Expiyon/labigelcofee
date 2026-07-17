@@ -5,12 +5,16 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import Sidebar from '@/components/admin/Sidebar';
 
+// Pages only the ADMIN role may open. EDITOR accounts are limited to the
+// products list (image swapping) and their own profile.
+const ADMIN_ONLY_PATHS = ['/admin', '/admin/kategoriler', '/admin/ayarlar', '/admin/kullanicilar', '/admin/tasarim-rehberi'];
+
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -19,6 +23,12 @@ export default function AdminLayout({
       router.push('/admin/giris');
     }
   }, [isLoading, isAuthenticated, pathname, router]);
+
+  useEffect(() => {
+    if (!isLoading && isAuthenticated && user?.role !== 'ADMIN' && ADMIN_ONLY_PATHS.includes(pathname)) {
+      router.push('/admin/urunler');
+    }
+  }, [isLoading, isAuthenticated, user, pathname, router]);
 
   if (isLoading) {
     return (

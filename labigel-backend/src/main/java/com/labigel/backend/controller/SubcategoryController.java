@@ -6,6 +6,7 @@ import com.labigel.backend.dto.response.SubcategoryResponse;
 import com.labigel.backend.service.SubcategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,24 +24,28 @@ public class SubcategoryController {
         return ApiResponse.success(subcategoryService.getSubcategoryBySlug(slug), "Alt kategori detayı getirildi");
     }
 
-    // Admin Endpoints
+    // Admin Endpoints — subcategory management is ADMIN-only.
     @PostMapping("/admin/subcategories")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<SubcategoryResponse> createSubcategory(@Valid @RequestBody SubcategoryRequest request) {
         return ApiResponse.success(subcategoryService.createSubcategory(request), "Alt kategori oluşturuldu");
     }
 
     @PutMapping("/admin/subcategories/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<SubcategoryResponse> updateSubcategory(@PathVariable Long id, @Valid @RequestBody SubcategoryRequest request) {
         return ApiResponse.success(subcategoryService.updateSubcategory(id, request), "Alt kategori güncellendi");
     }
 
     @DeleteMapping("/admin/subcategories/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<Void> deleteSubcategory(@PathVariable Long id) {
         subcategoryService.deleteSubcategory(id);
         return ApiResponse.success(null, "Alt kategori silindi");
     }
 
     @PatchMapping("/admin/subcategories/{id}/toggle")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<SubcategoryResponse> toggleActive(@PathVariable Long id) {
         return ApiResponse.success(subcategoryService.toggleActive(id), "Alt kategori durumu güncellendi");
     }

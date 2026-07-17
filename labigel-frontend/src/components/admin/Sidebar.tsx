@@ -4,25 +4,27 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
-import { 
-  FiHome, 
-  FiLayers, 
-  FiBox, 
-  FiSettings, 
-  FiLogOut, 
-  FiMenu, 
+import {
+  FiHome,
+  FiLayers,
+  FiBox,
+  FiSettings,
+  FiLogOut,
+  FiMenu,
   FiX,
   FiUser,
-  FiBook
+  FiBook,
+  FiUsers
 } from 'react-icons/fi';
 
 const menuItems = [
-  { path: '/admin', name: 'Dashboard', icon: FiHome },
-  { path: '/admin/kategoriler', name: 'Kategoriler', icon: FiLayers },
-  { path: '/admin/urunler', name: 'Ürünler', icon: FiBox },
-  { path: '/admin/ayarlar', name: 'Site Ayarları', icon: FiSettings },
-  { path: '/admin/profil', name: 'Profil', icon: FiUser },
-  { path: '/admin/tasarim-rehberi', name: 'UI Rehberi', icon: FiBook },
+  { path: '/admin', name: 'Dashboard', icon: FiHome, adminOnly: true },
+  { path: '/admin/kategoriler', name: 'Kategoriler', icon: FiLayers, adminOnly: true },
+  { path: '/admin/urunler', name: 'Ürünler', icon: FiBox, adminOnly: false },
+  { path: '/admin/ayarlar', name: 'Site Ayarları', icon: FiSettings, adminOnly: true },
+  { path: '/admin/kullanicilar', name: 'Kullanıcılar', icon: FiUsers, adminOnly: true },
+  { path: '/admin/profil', name: 'Profil', icon: FiUser, adminOnly: false },
+  { path: '/admin/tasarim-rehberi', name: 'UI Rehberi', icon: FiBook, adminOnly: true },
 ];
 
 const Sidebar = () => {
@@ -31,6 +33,9 @@ const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   if (pathname === '/admin/giris') return null;
+
+  const isAdmin = user?.role === 'ADMIN';
+  const visibleMenuItems = menuItems.filter(item => !item.adminOnly || isAdmin);
 
   const toggleSidebar = () => setIsOpen(!isOpen);
 
@@ -93,7 +98,7 @@ const Sidebar = () => {
         </div>
 
         <nav style={{ flex: 1, padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          {menuItems.map((item) => {
+          {visibleMenuItems.map((item) => {
             const isActive = pathname === item.path || (item.path !== '/admin' && pathname.startsWith(item.path));
             const Icon = item.icon;
             return (

@@ -138,6 +138,14 @@ public class ProductService {
     }
 
     @Transactional
+    public ProductResponse updateProductImage(Long id, String imageUrl) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Ürün bulunamadı: " + id));
+        product.setImageUrl(imageUrl);
+        return mapToResponse(productRepository.save(product));
+    }
+
+    @Transactional
     public ProductResponse toggleActive(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Ürün bulunamadı: " + id));

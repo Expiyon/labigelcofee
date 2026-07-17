@@ -42,9 +42,21 @@ export interface Product {
   categoryName?: string;
 }
 
+export type UserRole = 'ADMIN' | 'EDITOR';
+
 export interface User {
   email: string;
   fullName: string;
+  role: UserRole;
+}
+
+export interface UserAccount {
+  id: number;
+  email: string;
+  fullName: string;
+  role: UserRole;
+  isActive: boolean;
+  createdAt: string;
 }
 
 export interface SiteSettings {
@@ -82,4 +94,5 @@ export interface AuthResponse {
   token: string;
   email: string;
   fullName: string;
+  role: UserRole;
 }

@@ -96,7 +96,7 @@ export default function ProfilePage() {
               </label>
               <div>
                 <span className="badge primary" style={{ fontSize: '0.875rem', padding: '6px 12px' }}>
-                  Admin
+                  {user?.role === 'EDITOR' ? 'Görsel Editörü' : 'Admin'}
                 </span>
               </div>
             </div>

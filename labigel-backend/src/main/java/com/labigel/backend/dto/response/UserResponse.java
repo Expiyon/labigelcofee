@@ -1,17 +1,25 @@
 package com.labigel.backend.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthResponse {
-    private String token;
+public class UserResponse {
+    private Long id;
     private String email;
     private String fullName;
     private String role;
+
+    @JsonProperty("isActive")
+    private boolean isActive;
+
+    private LocalDateTime createdAt;
 }

@@ -4,6 +4,7 @@ import com.labigel.backend.dto.response.ApiResponse;
 import com.labigel.backend.service.FileStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,8 +15,10 @@ public class FileUploadController {
 
     private final FileStorageService fileStorageService;
 
-    // Upload file to local storage — returns the absolute URL as a String
+    // Upload file to local storage — returns the absolute URL as a String.
+    // Allowed for EDITOR too: they need this to swap a product image.
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
     public ResponseEntity<ApiResponse<String>> uploadFile(
             @RequestParam("file") MultipartFile file) {
         String url = fileStorageService.upload(file);
@@ -24,6 +27,7 @@ public class FileUploadController {
 
     // Delete file from local storage by filename
     @DeleteMapping("/{filename}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<Void>> deleteFile(@PathVariable String filename) {
         fileStorageService.delete(filename);
         return ResponseEntity.ok(ApiResponse.<Void>success("Dosya başarıyla silindi"));

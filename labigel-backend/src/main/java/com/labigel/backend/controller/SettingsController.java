@@ -7,6 +7,7 @@ import com.labigel.backend.service.SettingsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,6 +29,7 @@ public class SettingsController {
 
     // Get site settings (admin)
     @GetMapping("/api/admin/settings")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<SettingsResponse>> getSettings() {
         SettingsResponse settings = settingsService.getSettings();
         return ResponseEntity.ok(ApiResponse.success(settings));
@@ -35,6 +37,7 @@ public class SettingsController {
 
     // Update site settings (admin)
     @PutMapping("/api/admin/settings")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<SettingsResponse>> updateSettings(
             @Valid @RequestBody SettingsRequest request) {
         SettingsResponse settings = settingsService.updateSettings(request);

@@ -5,11 +5,12 @@ import { adminApi } from '@/lib/api';
 import { Category, Product, Subcategory } from '@/types';
 import { getErrorMessage, formatPrice } from '@/lib/utils';
 import toast from 'react-hot-toast';
-import { FiPlus, FiEdit2, FiTrash2, FiSearch } from 'react-icons/fi';
+import { FiPlus, FiEdit2, FiTrash2, FiSearch, FiImage } from 'react-icons/fi';
 import Image from 'next/image';
 import Modal from '@/components/admin/Modal';
 import ImageUploader from '@/components/admin/ImageUploader';
 import AdminLoading from '@/components/admin/AdminLoading';
+import { useAuth } from '@/hooks/useAuth';
 
 // ─── Product Form Modal ────────────────────────────────────────────────────────
 const ProductFormModal = ({
@@ -213,27 +214,85 @@ const ProductFormModal = ({
   );
 };
 
+// ─── Image-only Modal (EDITOR role) ────────────────────────────────────────────
+// EDITOR accounts may only swap a product's photo — every other field is
+// hidden, and saving hits the dedicated image-only endpoint on the backend.
+const ProductImageModal = ({
+  isOpen, onClose, onSave, product,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onSave: () => void;
+  product: Product | null;
+}) => {
+  const [imageUrl, setImageUrl] = useState('');
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    setImageUrl(product?.imageUrl || '');
+  }, [product, isOpen]);
+
+  if (!product) return null;
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      await adminApi.updateProductImage(product.id, imageUrl);
+      toast.success('Görsel güncellendi');
+      onSave();
+      onClose();
+    } catch (err) {
+      toast.error(getErrorMessage(err, 'Görsel güncellenemedi'));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} title={`Görsel Değiştir — ${product.name}`}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <ImageUploader
+          currentImageUrl={imageUrl}
+          onUpload={(url) => setImageUrl(url)}
+          onRemove={() => setImageUrl('')}
+        />
+        <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+          <button type="button" className="btn btn-secondary" onClick={onClose}>İptal</button>
+          <button type="button" className="btn btn-primary" disabled={saving} onClick={handleSave}>
+            {saving ? 'Kaydediliyor...' : 'Kaydet'}
+          </button>
+        </div>
+      </div>
+    </Modal>
+  );
+};
+
 // ─── Main Page ─────────────────────────────────────────────────────────────────
 export default function ProductsPage() {
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'ADMIN';
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterActive, setFilterActive] = useState<'all' | 'active' | 'passive'>('all');
   const [modalOpen, setModalOpen] = useState(false);
+  const [imageModalOpen, setImageModalOpen] = useState(false);
   const [editProduct, setEditProduct] = useState<Product | null>(null);
 
   const fetchAll = async () => {
     try {
+      // EDITOR accounts can't call /admin/categories — they only need the
+      // product list to pick a photo to swap.
       const [productsRes, categoriesRes] = await Promise.all([
         adminApi.getProducts({ size: 200 }),
-        adminApi.getCategories(),
+        isAdmin ? adminApi.getCategories() : Promise.resolve(null),
       ]);
       if (productsRes.success) {
         const data = productsRes.data;
         setProducts(Array.isArray(data) ? data : data.content);
       }
-      if (categoriesRes.success) setCategories(categoriesRes.data);
+      if (categoriesRes?.success) setCategories(categoriesRes.data);
     } catch {
       toast.error('Veriler yüklenemedi');
     } finally {
@@ -241,7 +300,7 @@ export default function ProductsPage() {
     }
   };
 
-  useEffect(() => { fetchAll(); }, []);
+  useEffect(() => { fetchAll(); }, [isAdmin]);
 
   const handleDelete = async (id: number) => {
     if (!confirm('Ürünü silmek istediğinize emin misiniz?')) return;
@@ -271,9 +330,11 @@ export default function ProductsPage() {
     <div>
       <div className="flex-between mb-8">
         <h1>Ürünler <span style={{ fontSize: '1rem', color: 'var(--color-text-muted)', fontWeight: 400 }}>({products.length})</span></h1>
-        <button className="btn btn-primary" onClick={() => { setEditProduct(null); setModalOpen(true); }}>
-          <FiPlus /> Yeni Ürün
-        </button>
+        {isAdmin && (
+          <button className="btn btn-primary" onClick={() => { setEditProduct(null); setModalOpen(true); }}>
+            <FiPlus /> Yeni Ürün
+          </button>
+        )}
       </div>
 
       {/* Filters */}
@@ -344,22 +405,36 @@ export default function ProductsPage() {
                   {product.calories ? `${product.calories} kcal` : '—'}
                 </td>
                 <td style={{ padding: '12px 16px' }}>
-                  <button
-                    onClick={() => handleToggle(product.id)}
-                    className={`badge ${product.isActive ? 'success' : ''}`}
-                    style={{ border: 'none', cursor: 'pointer' }}
-                  >
-                    {product.isActive ? 'Aktif' : 'Pasif'}
-                  </button>
+                  {isAdmin ? (
+                    <button
+                      onClick={() => handleToggle(product.id)}
+                      className={`badge ${product.isActive ? 'success' : ''}`}
+                      style={{ border: 'none', cursor: 'pointer' }}
+                    >
+                      {product.isActive ? 'Aktif' : 'Pasif'}
+                    </button>
+                  ) : (
+                    <span className={`badge ${product.isActive ? 'success' : ''}`}>
+                      {product.isActive ? 'Aktif' : 'Pasif'}
+                    </span>
+                  )}
                 </td>
                 <td style={{ padding: '12px 16px' }}>
                   <div style={{ display: 'flex', gap: '8px' }}>
-                    <button onClick={() => { setEditProduct(product); setModalOpen(true); }} className="btn btn-secondary" style={{ padding: '6px 10px' }}>
-                      <FiEdit2 size={15} />
-                    </button>
-                    <button onClick={() => handleDelete(product.id)} className="btn btn-danger" style={{ padding: '6px 10px' }}>
-                      <FiTrash2 size={15} />
-                    </button>
+                    {isAdmin ? (
+                      <>
+                        <button onClick={() => { setEditProduct(product); setModalOpen(true); }} className="btn btn-secondary" style={{ padding: '6px 10px' }}>
+                          <FiEdit2 size={15} />
+                        </button>
+                        <button onClick={() => handleDelete(product.id)} className="btn btn-danger" style={{ padding: '6px 10px' }}>
+                          <FiTrash2 size={15} />
+                        </button>
+                      </>
+                    ) : (
+                      <button onClick={() => { setEditProduct(product); setImageModalOpen(true); }} className="btn btn-secondary" style={{ padding: '6px 10px' }}>
+                        <FiImage size={15} /> Görsel
+                      </button>
+                    )}
                   </div>
                 </td>
               </tr>
@@ -377,6 +452,13 @@ export default function ProductsPage() {
         onSave={fetchAll}
         editItem={editProduct}
         categories={categories}
+      />
+
+      <ProductImageModal
+        isOpen={imageModalOpen}
+        onClose={() => setImageModalOpen(false)}
+        onSave={fetchAll}
+        product={editProduct}
       />
     </div>
   );

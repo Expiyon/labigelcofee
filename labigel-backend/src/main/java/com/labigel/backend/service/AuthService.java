@@ -43,6 +43,7 @@ public class AuthService {
                 .token(jwt)
                 .email(user.getEmail())
                 .fullName(user.getFullName())
+                .role(user.getRole())
                 .build();
     }
 
@@ -57,6 +58,7 @@ public class AuthService {
                 .token("") // Not needed for 'me' request
                 .email(user.getEmail())
                 .fullName(user.getFullName())
+                .role(user.getRole())
                 .build();
     }
 

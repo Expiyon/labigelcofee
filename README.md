@@ -48,6 +48,15 @@ Servisler ayağa kalktıktan sonra (ilk açılışta backend, veritabanı boşsa
 
 > Bu bilgiler yalnızca yerel geliştirme içindir. Gerçek bir sunucuya deploy edecekseniz `docker-compose.yml` içindeki veritabanı şifresini ve `JWT_SECRET` değerini değiştirin, ilk girişten sonra admin şifresini panelden güncelleyin.
 
+### Kullanıcı rolleri
+
+Admin panelinde iki rol vardır:
+
+- **Admin** — panelin tüm bölümlerine (Dashboard, Kategoriler, Ürünler, Site Ayarları, Kullanıcılar) tam erişim.
+- **Görsel Editörü** — sadece Ürünler listesini görür ve mevcut ürünlerin fotoğrafını değiştirebilir; başka hiçbir şeyi (fiyat, isim, kategori, silme, yeni ürün ekleme, site ayarları vb.) değiştiremez. Bu kısıtlama hem arayüzde hem backend'de (`@PreAuthorize`) uygulanır.
+
+Yeni bir "Görsel Editörü" hesabı oluşturmak için Admin olarak giriş yapıp **Kullanıcılar** sayfasından "Yeni Kullanıcı" ekleyin.
+
 ### Menü verisini yükleme (önemli)
 
 `docker compose up` ilk kez çalıştırıldığında veritabanı **boştur** — uygulama kodu yalnızca varsayılan bir admin kullanıcısı ve boş site ayarları oluşturur, gerçek ürün/kategori verisini oluşturmaz. Menüyü boş görürseniz (ör. "ürün bulunamadı") bu normaldir; iki seçeneğiniz var:

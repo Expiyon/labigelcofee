@@ -71,7 +71,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         try {
           const res = await adminApi.getMe();
           if (res.success) {
-            setUser({ email: res.data.email, fullName: res.data.fullName });
+            setUser({ email: res.data.email, fullName: res.data.fullName, role: res.data.role });
           }
         } catch {
           console.error("Token geçersiz veya süresi dolmuş");
@@ -90,7 +90,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (res.success) {
         const authData: AuthResponse = res.data;
         localStorage.setItem('token', authData.token);
-        setUser({ email: authData.email, fullName: authData.fullName });
+        setUser({ email: authData.email, fullName: authData.fullName, role: authData.role });
         toast.success(res.message || 'Giriş başarılı');
         
         // Refresh site settings on login to sync colors

@@ -2,6 +2,7 @@ package com.labigel.backend.service;
 
 import com.labigel.backend.dto.response.DashboardResponse;
 import com.labigel.backend.dto.response.ProductResponse;
+import com.labigel.backend.entity.Product;
 import com.labigel.backend.repository.CategoryRepository;
 import com.labigel.backend.repository.ProductRepository;
 import com.labigel.backend.repository.SubcategoryRepository;
@@ -37,7 +38,7 @@ public class DashboardService {
                         .price(p.getPrice())
                         .imageUrl(p.getImageUrl())
                         .isActive(p.isActive())
-                        .categoryName(p.getSubcategory().getCategory().getName())
+                        .categoryName(resolveCategoryName(p))
                         .build())
                 .collect(Collectors.toList());
 
@@ -48,5 +49,15 @@ public class DashboardService {
                 .totalSubcategories(totalSubcategories)
                 .recentProducts(recentProducts)
                 .build();
+    }
+
+    private String resolveCategoryName(Product product) {
+        if (product.getCategory() != null) {
+            return product.getCategory().getName();
+        }
+        if (product.getSubcategory() != null && product.getSubcategory().getCategory() != null) {
+            return product.getSubcategory().getCategory().getName();
+        }
+        return null;
     }
 }
