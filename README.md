@@ -48,6 +48,20 @@ Servisler ayağa kalktıktan sonra (ilk açılışta backend, veritabanı boşsa
 
 > Bu bilgiler yalnızca yerel geliştirme içindir. Gerçek bir sunucuya deploy edecekseniz `docker-compose.yml` içindeki veritabanı şifresini ve `JWT_SECRET` değerini değiştirin, ilk girişten sonra admin şifresini panelden güncelleyin.
 
+### Menü verisini yükleme (önemli)
+
+`docker compose up` ilk kez çalıştırıldığında veritabanı **boştur** — uygulama kodu yalnızca varsayılan bir admin kullanıcısı ve boş site ayarları oluşturur, gerçek ürün/kategori verisini oluşturmaz. Menüyü boş görürseniz (ör. "ürün bulunamadı") bu normaldir; iki seçeneğiniz var:
+
+1. **Admin panelinden manuel olarak** kategori/ürün ekleyin, veya
+2. **Hazır menü verisini içe aktarın** — bu repoda gerçek Labigel menüsünün (23 kategori, 135 ürün) dökümü `labigel-backend/db/seed_data.sql` içinde bulunuyor:
+
+```bash
+docker compose up -d          # servisler ayakta olsun, şema oluşsun
+docker exec -i labigel_db psql -U labigel -d labigel_db < labigel-backend/db/seed_data.sql
+```
+
+Bu komut yalnızca **boş** bir veritabanında (kategoriler/ürünler tablosu boşken) çalışır — zaten veri varsa yinelenen kayıt hatası (duplicate key) alırsınız, tekrar çalıştırmayın.
+
 Servisleri durdurmak için:
 
 ```bash
