@@ -225,6 +225,49 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ─── Daylight Section — brighter, sunnier atmosphere layer ───────────── */}
+      <section className="responsive-section">
+        <div className="container section-block" style={{ marginBottom: '72px' }}>
+          <span className="ghost-text">Gündüz</span>
+          <h2 className="section-heading light">Gün Işığında Labigel</h2>
+          <div className="divider-gold" />
+          <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.0625rem', marginTop: '28px', maxWidth: '540px', marginLeft: 'auto', marginRight: 'auto' }}>
+            Güneşli bahçemizde, taze lezzetler ve keyifli sohbetlerle geçen anlar.
+          </p>
+        </div>
+
+        <div className="container">
+          <div className="grid-2">
+            {[
+              { src: '/images/tabela-gunduz.jpg', title: "Batıkent'in Kalbinde", desc: 'Gül bahçeleri arasında güneşli karşılama' },
+              { src: '/images/bahce-icecekler.jpg', title: 'Bahçede Öğle Keyfi', desc: 'Taze içecekler ve atıştırmalıklarla' },
+              { src: '/images/cay-atistirmalik.jpg', title: 'Çay Eşliğinde', desc: 'Bahçemizde huzurlu bir durak' },
+              { src: '/images/pasta.jpg', title: 'Tatlı Bir Ara', desc: 'Güneşin altında bir dilim keyif' },
+            ].map((img, idx) => (
+              <div key={idx} className="card gallery-card">
+                <Image
+                  src={img.src}
+                  alt={img.title}
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  className="gallery-img"
+                />
+                <div style={{
+                  position: 'absolute', inset: 0,
+                  background: 'linear-gradient(to top, rgba(11,14,19,0.9) 0%, rgba(11,14,19,0.25) 55%, transparent 100%)',
+                  display: 'flex', alignItems: 'flex-end', padding: '28px',
+                }}>
+                  <div>
+                    <h4 style={{ fontSize: '1.375rem', fontWeight: 500, fontFamily: 'var(--font-heading)', color: 'white' }}>{img.title}</h4>
+                    <p style={{ fontSize: '0.8125rem', color: 'var(--color-primary-light)', marginTop: '4px', letterSpacing: '1px' }}>{img.desc}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ─── Contact & Map Section ───────────────────────────────────────────── */}
       <section id="iletisim" className="responsive-section">
         <div className="container">

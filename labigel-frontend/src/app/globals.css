@@ -410,6 +410,77 @@ select.input option { background: var(--color-bg-elevated); color: var(--color-t
   -webkit-box-orient: vertical;
 }
 
+/* Menu chooser — Yiyecekler / İçecekler entry cards on /menu */
+.menu-choice-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  padding: 48px 28px;
+  background: var(--color-bg-card);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-primary);
+  transition: all var(--transition);
+}
+
+.menu-choice-card:hover {
+  border-color: var(--color-border-hover);
+  background: var(--color-bg-elevated);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.35);
+}
+
+.menu-choice-icon {
+  width: 88px;
+  height: 88px;
+  margin-bottom: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(198, 161, 91, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  box-shadow: 0 0 30px rgba(198, 161, 91, 0.16), inset 0 0 16px rgba(198, 161, 91, 0.06);
+  transition: all var(--transition);
+}
+
+.menu-choice-card:hover .menu-choice-icon {
+  box-shadow: 0 0 44px rgba(198, 161, 91, 0.32), inset 0 0 20px rgba(198, 161, 91, 0.1);
+}
+
+.menu-choice-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  font-family: var(--font-heading);
+  color: var(--color-primary-light);
+}
+
+.menu-choice-desc {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+.menu-choice-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+@media (max-width: 576px) {
+  .menu-choice-card {
+    padding: 36px 20px;
+  }
+}
+
 /* Admin Sidebar Responsive */
 @media (max-width: 1024px) {
   .mobile-toggle { display: block !important; }

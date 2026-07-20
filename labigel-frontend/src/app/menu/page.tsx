@@ -2,26 +2,24 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import Header from '@/components/public/Header';
 import Footer from '@/components/public/Footer';
 import LoadingSkeleton from '@/components/public/LoadingSkeleton';
 import { publicApi } from '@/lib/api';
 import { Category, CategoryGroup } from '@/types';
 import { useAuth } from '@/hooks/useAuth';
-import { getCategoryIcon } from '@/lib/categoryIcon';
+import { GiForkKnifeSpoon, GiCoffeeCup } from 'react-icons/gi';
 import { FiChevronRight } from 'react-icons/fi';
 
-const GROUP_TABS: { key: CategoryGroup; label: string }[] = [
-  { key: 'FOOD', label: 'Yiyecekler' },
-  { key: 'DRINK', label: 'İçecekler' },
+const GROUP_CHOICES: { key: CategoryGroup; slug: string; label: string; desc: string; Icon: typeof GiForkKnifeSpoon }[] = [
+  { key: 'FOOD', slug: 'yiyecek', label: 'Yiyecekler', desc: 'Kahvaltıdan tatlıya, tüm lezzetlerimiz', Icon: GiForkKnifeSpoon },
+  { key: 'DRINK', slug: 'icecek', label: 'İçecekler', desc: 'Kahveden frozene, tüm içeceklerimiz', Icon: GiCoffeeCup },
 ];
 
 export default function MenuPage() {
   const { settings } = useAuth();
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [activeGroup, setActiveGroup] = useState<CategoryGroup>('FOOD');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,74 +63,28 @@ export default function MenuPage() {
           <h1 className="section-heading">Menülerimiz</h1>
           <div className="divider-gold" />
           <p style={{ color: 'var(--color-text-secondary)', marginTop: '24px', fontSize: '0.9375rem' }}>
-            Her damak tadı için özenle hazırlanmış lezzetlerimizi keşfedin.
+            Önce bir bölüm seçin, ardından kategorileri keşfedin.
           </p>
         </div>
 
-        {categories.length > 0 ? (
-          <>
-            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginBottom: '32px' }}>
-              {GROUP_TABS.map(tab => {
-                const count = categories.filter(c => c.group === tab.key).length;
-                if (count === 0) return null;
-                return (
-                  <button
-                    key={tab.key}
-                    onClick={() => setActiveGroup(tab.key)}
-                    style={{
-                      padding: '10px 24px',
-                      borderRadius: '999px',
-                      border: activeGroup === tab.key ? '1px solid var(--color-primary)' : '1px solid var(--color-border)',
-                      background: activeGroup === tab.key ? 'var(--color-primary)' : 'var(--color-bg-surface)',
-                      color: activeGroup === tab.key ? '#12100A' : 'var(--color-text-primary)',
-                      fontFamily: 'inherit',
-                      fontSize: '0.9375rem',
-                      fontWeight: activeGroup === tab.key ? 700 : 500,
-                      cursor: 'pointer',
-                      transition: 'all var(--transition)',
-                    }}
-                  >
-                    {tab.label} <span style={{ opacity: 0.75, fontWeight: 400 }}>({count})</span>
-                  </button>
-                );
-              })}
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {categories.filter(c => c.group === activeGroup).map((category) => {
-              const Icon = getCategoryIcon(category.name);
-              const itemCount = category.productCount || 0;
-              return (
-                <Link
-                  key={category.id}
-                  href={`/kategori/${category.slug}`}
-                  className="category-card"
-                >
-                  <div className="category-card-icon">
-                    {category.imageUrl ? (
-                      <Image src={category.imageUrl} alt={category.name} fill style={{ objectFit: 'cover' }} />
-                    ) : (
-                      <Icon size={28} color="var(--color-primary)" />
-                    )}
-                  </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <h2 className="category-card-title">{category.name}</h2>
-                    <p className="category-card-desc">
-                      {category.description || `${itemCount} ${itemCount === 1 ? 'ürün' : 'çeşit ürün'}`}
-                    </p>
-                  </div>
-                  <FiChevronRight size={20} color="var(--color-text-muted)" style={{ flexShrink: 0 }} />
-                </Link>
-              );
-              })}
-            </div>
-          </>
-        ) : (
-          <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--color-text-muted)' }}>
-            <p style={{ fontSize: '3rem', marginBottom: '16px' }}>☕</p>
-            <p>Menü hazırlanıyor...</p>
-          </div>
-        )}
+        <div className="grid-2" style={{ maxWidth: '760px', margin: '0 auto' }}>
+          {GROUP_CHOICES.map(({ key, slug, label, desc, Icon }) => {
+            const count = categories.filter(c => c.group === key).length;
+            if (count === 0) return null;
+            return (
+              <Link key={key} href={`/menu/${slug}`} className="menu-choice-card">
+                <div className="menu-choice-icon">
+                  <Icon size={40} />
+                </div>
+                <h2 className="menu-choice-title">{label}</h2>
+                <p className="menu-choice-desc">{desc}</p>
+                <span className="menu-choice-cta">
+                  Keşfet <FiChevronRight size={16} />
+                </span>
+              </Link>
+            );
+          })}
+        </div>
       </div>
 
       <Footer />
