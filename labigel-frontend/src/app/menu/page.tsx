@@ -7,15 +7,21 @@ import Header from '@/components/public/Header';
 import Footer from '@/components/public/Footer';
 import LoadingSkeleton from '@/components/public/LoadingSkeleton';
 import { publicApi } from '@/lib/api';
-import { Category } from '@/types';
+import { Category, CategoryGroup } from '@/types';
 import { useAuth } from '@/hooks/useAuth';
 import { getCategoryIcon } from '@/lib/categoryIcon';
 import { FiChevronRight } from 'react-icons/fi';
+
+const GROUP_TABS: { key: CategoryGroup; label: string }[] = [
+  { key: 'FOOD', label: 'Yiyecekler' },
+  { key: 'DRINK', label: 'İçecekler' },
+];
 
 export default function MenuPage() {
   const { settings } = useAuth();
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeGroup, setActiveGroup] = useState<CategoryGroup>('FOOD');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,8 +70,36 @@ export default function MenuPage() {
         </div>
 
         {categories.length > 0 ? (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            {categories.map((category) => {
+          <>
+            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginBottom: '32px' }}>
+              {GROUP_TABS.map(tab => {
+                const count = categories.filter(c => c.group === tab.key).length;
+                if (count === 0) return null;
+                return (
+                  <button
+                    key={tab.key}
+                    onClick={() => setActiveGroup(tab.key)}
+                    style={{
+                      padding: '10px 24px',
+                      borderRadius: '999px',
+                      border: activeGroup === tab.key ? '1px solid var(--color-primary)' : '1px solid var(--color-border)',
+                      background: activeGroup === tab.key ? 'var(--color-primary)' : 'var(--color-bg-surface)',
+                      color: activeGroup === tab.key ? '#12100A' : 'var(--color-text-primary)',
+                      fontFamily: 'inherit',
+                      fontSize: '0.9375rem',
+                      fontWeight: activeGroup === tab.key ? 700 : 500,
+                      cursor: 'pointer',
+                      transition: 'all var(--transition)',
+                    }}
+                  >
+                    {tab.label} <span style={{ opacity: 0.75, fontWeight: 400 }}>({count})</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {categories.filter(c => c.group === activeGroup).map((category) => {
               const Icon = getCategoryIcon(category.name);
               const itemCount = category.productCount || 0;
               return (
@@ -90,8 +124,9 @@ export default function MenuPage() {
                   <FiChevronRight size={20} color="var(--color-text-muted)" style={{ flexShrink: 0 }} />
                 </Link>
               );
-            })}
-          </div>
+              })}
+            </div>
+          </>
         ) : (
           <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--color-text-muted)' }}>
             <p style={{ fontSize: '3rem', marginBottom: '16px' }}>☕</p>

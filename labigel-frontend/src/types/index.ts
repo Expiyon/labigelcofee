@@ -1,9 +1,12 @@
+export type CategoryGroup = 'FOOD' | 'DRINK';
+
 export interface Category {
   id: number;
   name: string;
   slug: string;
   description?: string;
   imageUrl?: string;
+  group: CategoryGroup;
   displayOrder: number;
   isActive: boolean;
   subcategoryCount?: number;

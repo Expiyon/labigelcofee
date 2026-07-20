@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { adminApi } from '@/lib/api';
-import { Category, Subcategory } from '@/types';
+import { Category, CategoryGroup, Subcategory } from '@/types';
 import { getErrorMessage } from '@/lib/utils';
 import toast from 'react-hot-toast';
 import { FiPlus, FiEdit2, FiTrash2, FiChevronDown, FiChevronRight } from 'react-icons/fi';
@@ -19,7 +19,7 @@ const CategoryFormModal = ({
   onSave: () => void;
   editItem: Category | null;
 }) => {
-  const [form, setForm] = useState({ name: '', description: '', imageUrl: '', displayOrder: 0, isActive: true });
+  const [form, setForm] = useState({ name: '', description: '', imageUrl: '', group: 'FOOD' as CategoryGroup, displayOrder: 0, isActive: true });
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -28,11 +28,12 @@ const CategoryFormModal = ({
         name: editItem.name,
         description: editItem.description || '',
         imageUrl: editItem.imageUrl || '',
+        group: editItem.group || 'FOOD',
         displayOrder: editItem.displayOrder,
         isActive: editItem.isActive,
       });
     } else {
-      setForm({ name: '', description: '', imageUrl: '', displayOrder: 0, isActive: true });
+      setForm({ name: '', description: '', imageUrl: '', group: 'FOOD', displayOrder: 0, isActive: true });
     }
   }, [editItem, isOpen]);
 
@@ -74,6 +75,20 @@ const CategoryFormModal = ({
             onUpload={(url) => setForm(p => ({ ...p, imageUrl: url }))}
             onRemove={() => setForm(p => ({ ...p, imageUrl: '' }))}
           />
+        </div>
+        <div>
+          <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.875rem', fontWeight: 500 }}>Menü Grubu *</label>
+          <select
+            className="input"
+            value={form.group}
+            onChange={e => setForm(p => ({ ...p, group: e.target.value as CategoryGroup }))}
+          >
+            <option value="FOOD">Yiyecek</option>
+            <option value="DRINK">İçecek</option>
+          </select>
+          <p style={{ marginTop: '6px', fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
+            Menü sayfasında bu kategori Yiyecekler mi yoksa İçecekler bölümünde mi görünecek.
+          </p>
         </div>
         <div className="grid-2">
           <div>
@@ -258,6 +273,9 @@ export default function CategoriesPage() {
                   {cat.subcategoryCount} alt kategori · {cat.productCount} ürün
                 </p>
               </div>
+              <span className={`badge ${cat.group === 'DRINK' ? 'primary' : ''}`} style={{ flexShrink: 0 }}>
+                {cat.group === 'DRINK' ? 'İçecek' : 'Yiyecek'}
+              </span>
               <button
                 onClick={e => { e.stopPropagation(); handleToggleCategory(cat.id); }}
                 className={`badge ${cat.isActive ? 'success' : ''}`}

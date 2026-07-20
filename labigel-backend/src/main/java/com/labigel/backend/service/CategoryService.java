@@ -57,6 +57,7 @@ public class CategoryService {
                 .slug(slug)
                 .description(request.getDescription())
                 .imageUrl(request.getImageUrl())
+                .menuGroup(request.getGroup() != null ? request.getGroup() : "FOOD")
                 .displayOrder(request.getDisplayOrder() != null ? request.getDisplayOrder() : 0)
                 .isActive(request.getIsActive() != null ? request.getIsActive() : true)
                 .build();
@@ -78,11 +79,15 @@ public class CategoryService {
         category.setName(request.getName());
         category.setSlug(newSlug);
         category.setDescription(request.getDescription());
-        
+
         if (request.getImageUrl() != null) {
             category.setImageUrl(request.getImageUrl());
         }
-        
+
+        if (request.getGroup() != null) {
+            category.setMenuGroup(request.getGroup());
+        }
+
         if (request.getDisplayOrder() != null) {
             category.setDisplayOrder(request.getDisplayOrder());
         }
@@ -182,6 +187,7 @@ public class CategoryService {
                 .slug(category.getSlug())
                 .description(category.getDescription())
                 .imageUrl(category.getImageUrl())
+                .group(category.getMenuGroup())
                 .displayOrder(category.getDisplayOrder())
                 .isActive(category.isActive())
                 .subcategoryCount(subcategories != null ? subcategories.size() : 0)

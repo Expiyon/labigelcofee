@@ -18,6 +18,7 @@ public class CategoryResponse {
     private String slug;
     private String description;
     private String imageUrl;
+    private String group;
     private Integer displayOrder;
 
     @JsonProperty("isActive")

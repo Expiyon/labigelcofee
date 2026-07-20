@@ -36,6 +36,13 @@ public class Category {
 
     private String imageUrl;
 
+    // Top-level menu grouping — "FOOD" or "DRINK". Drives the Yiyecekler /
+    // İçecekler split on the public menu page.
+    // Named menuGroup (not "group") because GROUP is a reserved SQL keyword.
+    @Column(name = "menu_group")
+    @Builder.Default
+    private String menuGroup = "FOOD";
+
     @Builder.Default
     private Integer displayOrder = 0;
 

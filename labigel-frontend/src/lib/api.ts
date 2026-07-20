@@ -3,6 +3,7 @@ import {
   ApiResponse,
   AuthResponse,
   Category,
+  CategoryGroup,
   DashboardStats,
   LoginRequest,
   Product,
@@ -60,6 +61,7 @@ export interface CategoryPayload {
   name: string;
   description?: string;
   imageUrl?: string;
+  group?: CategoryGroup;
   displayOrder: number;
   isActive: boolean;
 }
