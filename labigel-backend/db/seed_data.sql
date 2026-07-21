@@ -211,7 +211,7 @@ INSERT INTO public.products (id, calories, created_at, description, display_orde
 -- Name: categories_id_seq; Type: SEQUENCE SET; Schema: public; Owner: labigel
 --
 
-SELECT pg_catalog.setval('public.categories_id_seq', 33, true);
+SELECT pg_catalog.setval('public.categories_id_seq', 34, true);
 
 
 --
