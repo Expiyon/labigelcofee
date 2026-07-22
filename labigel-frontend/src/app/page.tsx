@@ -78,10 +78,10 @@ export default function LandingPage() {
       <section className="hero-section">
         <div className="hero-bg">
           <Image
-            src="/images/facade.jpg"
+            src="/images/tabela-gunduz.jpg"
             alt="Labigel Cafe Batıkent"
             fill
-            style={{ objectFit: 'cover' }}
+            style={{ objectFit: 'cover', objectPosition: 'center 32%' }}
             priority
           />
         </div>
