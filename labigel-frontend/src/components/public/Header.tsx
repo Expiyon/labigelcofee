@@ -48,6 +48,7 @@ const Header = () => {
         </Link>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+          <Link href="/galeri" className="nav-link nav-link-desktop">Galeri</Link>
           <Link href="/menu" className="nav-link nav-link-desktop">Menü</Link>
           <Link href="/arama" aria-label="Ürün ara" style={{
             width: '40px',

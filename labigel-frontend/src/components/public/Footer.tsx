@@ -50,6 +50,7 @@ const Footer = ({ settings: propSettings }: FooterProps) => {
         <nav style={{ display: 'flex', justifyContent: 'center', gap: '32px', flexWrap: 'wrap', marginBottom: '40px' }}>
           <Link href="/" className="nav-link">Ana Sayfa</Link>
           <Link href="/menu" className="nav-link">Menü</Link>
+          <Link href="/galeri" className="nav-link">Galeri</Link>
           <Link href="/arama" className="nav-link">Ara</Link>
         </nav>
 

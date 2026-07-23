@@ -69,6 +69,7 @@ export default function LandingPage() {
           <nav style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
             <a href="#hikaye" className="nav-link nav-link-desktop">Hikayemiz</a>
             <a href="#iletisim" className="nav-link nav-link-desktop">İletişim</a>
+            <Link href="/galeri" className="nav-link nav-link-desktop">Galeri</Link>
             <Link href="/menu" className="nav-link" style={{ color: 'var(--color-primary)' }}>Menü</Link>
           </nav>
         </div>
@@ -264,6 +265,12 @@ export default function LandingPage() {
                 </div>
               </div>
             ))}
+          </div>
+
+          <div style={{ textAlign: 'center', marginTop: '48px' }}>
+            <Link href="/galeri" className="btn-outline-pill">
+              Tüm Galeriyi Gör
+            </Link>
           </div>
         </div>
       </section>
