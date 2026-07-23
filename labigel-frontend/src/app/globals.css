@@ -356,6 +356,60 @@ select.input option { background: var(--color-bg-elevated); color: var(--color-t
   margin: 0 auto;
 }
 
+/* Colorful concept-icon accents — each "Menülerimiz" card gets its own hue */
+.concept-card.accent-amber .concept-circle {
+  border-color: rgba(224, 148, 66, 0.55);
+  color: #E09442;
+  box-shadow: 0 0 34px rgba(224, 148, 66, 0.22), inset 0 0 18px rgba(224, 148, 66, 0.08);
+}
+.concept-card.accent-amber .concept-title { color: #E09442; }
+.concept-card.accent-amber:hover .concept-circle {
+  box-shadow: 0 0 48px rgba(224, 148, 66, 0.4), inset 0 0 22px rgba(224, 148, 66, 0.12);
+}
+
+.concept-card.accent-rose .concept-circle {
+  border-color: rgba(214, 94, 110, 0.55);
+  color: #D65E6E;
+  box-shadow: 0 0 34px rgba(214, 94, 110, 0.22), inset 0 0 18px rgba(214, 94, 110, 0.08);
+}
+.concept-card.accent-rose .concept-title { color: #D65E6E; }
+.concept-card.accent-rose:hover .concept-circle {
+  box-shadow: 0 0 48px rgba(214, 94, 110, 0.4), inset 0 0 22px rgba(214, 94, 110, 0.12);
+}
+
+.concept-card.accent-teal .concept-circle {
+  border-color: rgba(56, 178, 172, 0.55);
+  color: #38B2AC;
+  box-shadow: 0 0 34px rgba(56, 178, 172, 0.22), inset 0 0 18px rgba(56, 178, 172, 0.08);
+}
+.concept-card.accent-teal .concept-title { color: #38B2AC; }
+.concept-card.accent-teal:hover .concept-circle {
+  box-shadow: 0 0 48px rgba(56, 178, 172, 0.4), inset 0 0 22px rgba(56, 178, 172, 0.12);
+}
+
+.concept-card.accent-violet .concept-circle {
+  border-color: rgba(159, 122, 234, 0.55);
+  color: #9F7AEA;
+  box-shadow: 0 0 34px rgba(159, 122, 234, 0.22), inset 0 0 18px rgba(159, 122, 234, 0.08);
+}
+.concept-card.accent-violet .concept-title { color: #9F7AEA; }
+.concept-card.accent-violet:hover .concept-circle {
+  box-shadow: 0 0 48px rgba(159, 122, 234, 0.4), inset 0 0 22px rgba(159, 122, 234, 0.12);
+}
+
+/* Ambient color-glow orbs — soft blurred blobs that add life behind sections */
+.glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  pointer-events: none;
+  z-index: -1;
+}
+.glow-orb.amber { background: radial-gradient(circle, rgba(224, 148, 66, 0.32) 0%, transparent 72%); }
+.glow-orb.rose { background: radial-gradient(circle, rgba(214, 94, 110, 0.3) 0%, transparent 72%); }
+.glow-orb.teal { background: radial-gradient(circle, rgba(56, 178, 172, 0.28) 0%, transparent 72%); }
+.glow-orb.violet { background: radial-gradient(circle, rgba(159, 122, 234, 0.3) 0%, transparent 72%); }
+
 /* Public Menu — Category Directory Cards */
 .category-card {
   display: flex;

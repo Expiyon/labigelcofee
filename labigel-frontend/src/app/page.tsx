@@ -13,10 +13,10 @@ const MAP_EMBED_URL = `https://www.google.com/maps?q=${encodeURIComponent(ADDRES
 const DIRECTIONS_URL = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(ADDRESS)}`;
 
 const CONCEPTS = [
-  { icon: LuCoffee, title: 'Özel Kahveler', desc: 'Özenle demlenen çekirdek kahveler ve el yapımı içecekler.' },
-  { icon: LuUtensils, title: 'Dünya Mutfağı', desc: 'Usta aşçılarımızın hazırladığı leziz tabaklar ve atıştırmalıklar.' },
-  { icon: LuDices, title: 'Oyun Salonu', desc: 'Okey, tavla ve masa oyunları için ferah, nezih bir aile salonu.' },
-  { icon: LuTreePalm, title: 'Geniş Teras', desc: 'Açık havada, yeşillikler içinde konforlu bir keyif alanı.' },
+  { icon: LuCoffee, title: 'Özel Kahveler', desc: 'Özenle demlenen çekirdek kahveler ve el yapımı içecekler.', accent: 'amber' },
+  { icon: LuUtensils, title: 'Dünya Mutfağı', desc: 'Usta aşçılarımızın hazırladığı leziz tabaklar ve atıştırmalıklar.', accent: 'rose' },
+  { icon: LuDices, title: 'Oyun Salonu', desc: 'Okey, tavla ve masa oyunları için ferah, nezih bir aile salonu.', accent: 'teal' },
+  { icon: LuTreePalm, title: 'Geniş Teras', desc: 'Açık havada, yeşillikler içinde konforlu bir keyif alanı.', accent: 'violet' },
 ];
 
 export default function LandingPage() {
@@ -130,7 +130,8 @@ export default function LandingPage() {
       </section>
 
       {/* ─── Story Section (Ghost Watermark) ─────────────────────────────────── */}
-      <section id="hikaye" className="responsive-section">
+      <section id="hikaye" className="responsive-section" style={{ overflow: 'hidden', zIndex: 0 }}>
+        <div className="glow-orb amber" style={{ width: '480px', height: '480px', top: '-160px', right: '-140px' }} />
         <div className="container section-block" style={{ maxWidth: '860px' }}>
           <span className="ghost-text">Hikayemiz</span>
           <h2 className="section-heading">Tek Mekânda, Sayısız Keyif Hikayesi</h2>
@@ -150,7 +151,9 @@ export default function LandingPage() {
       </section>
 
       {/* ─── Concepts / Menus Section ────────────────────────────────────────── */}
-      <section className="responsive-section" style={{ paddingTop: '20px' }}>
+      <section className="responsive-section" style={{ paddingTop: '20px', overflow: 'hidden', zIndex: 0 }}>
+        <div className="glow-orb rose" style={{ width: '420px', height: '420px', top: '10%', left: '-160px' }} />
+        <div className="glow-orb teal" style={{ width: '440px', height: '440px', bottom: '-120px', right: '-140px' }} />
         <div className="container section-block" style={{ marginBottom: '72px' }}>
           <span className="ghost-text">Menümüz</span>
           <h2 className="section-heading">Menülerimiz</h2>
@@ -165,7 +168,7 @@ export default function LandingPage() {
             {CONCEPTS.map((concept) => {
               const Icon = concept.icon;
               return (
-                <Link key={concept.title} href="/menu" className="concept-card">
+                <Link key={concept.title} href="/menu" className={`concept-card accent-${concept.accent}`}>
                   <div className="concept-circle">
                     <Icon size={40} strokeWidth={1.1} />
                   </div>
@@ -255,7 +258,7 @@ export default function LandingPage() {
                 />
                 <div style={{
                   position: 'absolute', inset: 0,
-                  background: 'linear-gradient(to top, rgba(11,14,19,0.9) 0%, rgba(11,14,19,0.25) 55%, transparent 100%)',
+                  background: 'linear-gradient(to top, rgba(11,14,19,0.78) 0%, rgba(11,14,19,0.15) 50%, transparent 100%)',
                   display: 'flex', alignItems: 'flex-end', padding: '28px',
                 }}>
                   <div>
@@ -276,7 +279,8 @@ export default function LandingPage() {
       </section>
 
       {/* ─── Contact & Map Section ───────────────────────────────────────────── */}
-      <section id="iletisim" className="responsive-section">
+      <section id="iletisim" className="responsive-section" style={{ overflow: 'hidden', zIndex: 0 }}>
+        <div className="glow-orb violet" style={{ width: '460px', height: '460px', top: '-100px', left: '50%', transform: 'translateX(-50%)' }} />
         <div className="container">
           <div className="contact-grid">
 
